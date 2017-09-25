@@ -7,9 +7,23 @@ Rect  -- two points, forming a rectangle
 
 """
 
-from hockey_core.util.geometry.coordinates import CoordinatesDirection
-from hockey_core.util.geometry.point import Point
+from random import random
+from coordinates import CoordinatesDirection
+from point import Point, average_between
 
+def random_between(a_float: float, another_float: float) -> float:
+    """ Random number in a range.
+    Args:
+        a_float: one side of the range.
+        another_float: the other side.
+
+    Returns:
+        a random number as a float.
+
+    """
+    the_min = min(a_float, another_float)
+    the_max = max(a_float, another_float)
+    return random() * (the_max - the_min) + the_min
 
 class Rect(object):
     """A rectangle identified by two points.
@@ -38,6 +52,14 @@ class Rect(object):
         self.coord_direction = direction
         self.set_points(pt1, pt2)
 
+    @classmethod
+    def from_topleft_widthheight(cls, top: float, left: float, width: float, height: float):
+        top_left_pt = Point.from_tuple((top,left))
+        return Rect(direction=CoordinatesDirection.SCREEN_DIRECTION, pt1=top_left_pt,
+                            pt2=Point(x=top_left_pt.x + width,
+                                      y=top_left_pt.y + height))
+
+
     def set_points(self, pt1, pt2):
         """Reset the rectangle coordinates."""
         (x_pt1, y_pt1) = pt1.as_tuple()
@@ -50,6 +72,25 @@ class Rect(object):
         else:
             self.top = max(y_pt1, y_pt2)
             self.bottom = min(y_pt1, y_pt2)
+        self.topleft = Point(self.left, self.top)
+        self.topright = Point(self.right, self.top)
+        self.bottomright = Point(self.right, self.bottom)
+        self.bottomleft = Point(self.left, self.bottom)
+        self.center = average_between(pt1 = self.topleft, pt2 = self.bottomright)
+        self.midbottom = Point(x =(self.topleft.x + self.bottomright.x) / 2, y = self.bottom)
+        self.midtop = Point(x =(self.topleft.x + self.bottomright.x) / 2, y = self.top)
+        self.height = self.bottom - self.top
+        self.width = self.right - self.left
+        self.midleft = Point(x = self.left, y = self.top + self.height/2)
+        self.midright = Point(x = self.right, y = self.top + self.height/2)
+
+    def top_left(self) -> Point:
+        """Return the top-left corner as a Point."""
+        return self.topleft
+
+    def bottom_right(self) -> Point:
+        """Return the bottom-right corner as a Point."""
+        return self.bottomright
 
     def clone(self):
         """
@@ -60,7 +101,7 @@ class Rect(object):
         Returns:
 
         """
-        return Rect(direction=self.coord_direction, pt1=self.bottom_right(), pt2=self.top_left())
+        return Rect(direction=self.coord_direction, pt1=self.bottomright(), pt2=self.topleft())
 
     def get_random_point(self) -> Point:
         """
@@ -69,7 +110,6 @@ class Rect(object):
             a Point
 
         """
-        from hockey_core.util.base import random_between
         an_x = random_between(self.right, self.left)
         a_y = random_between(self.top, self.bottom)
         return Point(x = an_x, y = a_y)
@@ -95,14 +135,6 @@ class Rect(object):
         """Return true if a rectangle overlaps this rectangle."""
         return (self.right > other.left and self.left < other.right and
                 self.top < other.bottom and self.bottom > other.top)
-
-    def top_left(self) -> Point:
-        """Return the top-left corner as a Point."""
-        return Point(self.left, self.top)
-
-    def bottom_right(self) -> Point:
-        """Return the bottom-right corner as a Point."""
-        return Point(self.right, self.bottom)
 
     def expanded_by(self, n_units):
         """Return a rectangle with extended borders.
@@ -131,7 +163,7 @@ class Rect(object):
 
     def __str__(self):
         return "coordinates: %s; <Rect %s-%s>" % \
-               (self.coord_direction, self.top_left(), self.bottom_right())
+               (self.coord_direction, self.topleft(), self.bottomright())
 
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__,
