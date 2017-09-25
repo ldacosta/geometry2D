@@ -69,7 +69,7 @@ class UnitTestVec2D(unittest.TestCase):
         self.assertAlmostEquals(v.get_angle_between(v2), -60)
         v2.rotate(v2.get_angle_between(v))
         angle = v.get_angle_between(v2)
-        self.assertAlmostEquals(v.get_angle_between(v2), 0)
+        self.assertAlmostEquals(angle, 0)
 
     def testHighLevel(self):
         basis0 = Vec2d(5.0, 0)
