@@ -37,6 +37,14 @@ class Point:
     def from_tuple(cls, pt_as_tuple:Tuple[float,float]):
         return cls(x=pt_as_tuple[0],y=pt_as_tuple[1])
 
+    def __getitem__(self, item):
+        if item == 0:
+            return self.x
+        elif item == 1:
+            return self.y
+        else:
+            raise RuntimeError("Index %d does not make sense in a point" % (item))
+
     def __attrs(self):
         """
         All attributes in a single representation.
@@ -59,6 +67,12 @@ class Point:
     def __sub__(self, another_point):
         """Point(x1-x2, y1-y2)"""
         return Point(self.x - another_point.x, self.y - another_point.y)
+
+    def __isub__(self, another_point):
+        self.x += another_point.x
+        self.y += another_point.y
+        return self
+
 
     def __mul__(self, scalar):
         """Point(x1*x2, y1*y2)"""
@@ -105,15 +119,16 @@ class Point:
         self.x = x
         self.y = y
 
-    # def slide(self, p):
-    #     '''Move to new (x+dx,y+dy).
-    #
-    #     Can anyone think up a better name for this function?
-    #     slide? shift? delta? move_by?
-    #     '''
-    #     self.x = self.x + p.x
-    #     self.y = self.y + p.y
-    #
+    def translate_following(self, a_vector):
+        """
+        Move to new (x+dx,y+dy).
+        :param a_vector: Vector 2D I have to follow.
+        :return: Unit.
+        """
+        self.x = self.x + a_vector.x
+        self.y = self.y + a_vector.y
+        return self
+
     def slide_xy(self, dx, dy):
         '''Move to new (x+dx,y+dy).
 
@@ -152,3 +167,7 @@ class Point:
         return result
 
 POINT_ZEROZERO = Point(x=0.0, y=0.0)
+
+def average_between(pt1: Point, pt2: Point) -> Point:
+    """Returns the point in the 'middle' of the two."""
+    return Point((pt1.x + pt2.x)/2, (pt1.y + pt2.y)/2)

@@ -6,6 +6,7 @@
 
 import operator
 import math
+from point import Point
 
 class Vec2d(object):
     """2d vector class, supports vector and scalar operators,
@@ -20,6 +21,13 @@ class Vec2d(object):
         else:
             self.x = x_or_pair
             self.y = y
+
+    @classmethod
+    def origin_to(self, a_pt: Point):
+        return Vec2d(x_or_pair=a_pt)
+
+    def is_null(self):
+        return (self.x == 0.0 ) and (self.y == 0.0)
 
     def __len__(self):
         return 2
@@ -332,10 +340,3 @@ class Vec2d(object):
 
     def __setstate__(self, dict):
         self.x, self.y = dict
-
-########################################################################
-## Unit Testing                                                       ##
-########################################################################
-if __name__ == "__main__":
-
-    v = Vec2d(x_or_pair = 1, y = 2)
