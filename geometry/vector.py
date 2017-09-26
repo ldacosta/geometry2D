@@ -4,9 +4,11 @@
 ################## http://www.pygame.org/wiki/2DVectorClass ##################
 """
 
-import operator
 import math
-from point import Point
+import operator
+
+from geometry.point import Point
+
 
 class Vec2d(object):
     """2d vector class, supports vector and scalar operators,

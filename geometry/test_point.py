@@ -13,7 +13,7 @@ TODO:
 import unittest
 
 from random import randint
-from hockey_core.util.geometry.point import Point
+from geometry.point import Point
 
 class TestPoint(unittest.TestCase):
     """Tests Point definition."""

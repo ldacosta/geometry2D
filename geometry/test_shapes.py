@@ -14,9 +14,9 @@ TODO:
 import unittest
 
 from random import randint
-from hockey_core.util.geometry.point import Point
-from hockey_core.util.geometry.shapes import Rect
-from hockey_core.util.geometry.coordinates import CoordinatesDirection
+from geometry.point import Point
+from geometry.shapes import Rect
+from geometry.coordinates import CoordinatesDirection
 
 class TestShapes(unittest.TestCase):
     """Tests all players' concerns.
