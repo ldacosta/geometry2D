@@ -8,8 +8,10 @@ Rect  -- two points, forming a rectangle
 """
 
 from random import random
-from coordinates import CoordinatesDirection
-from point import Point, average_between
+
+from geometry.coordinates import CoordinatesDirection
+from geometry.point import Point, average_between
+
 
 def random_between(a_float: float, another_float: float) -> float:
     """ Random number in a range.
@@ -101,7 +103,7 @@ class Rect(object):
         Returns:
 
         """
-        return Rect(direction=self.coord_direction, pt1=self.bottomright(), pt2=self.topleft())
+        return Rect(direction=self.coord_direction, pt1=self.bottomright, pt2=self.topleft)
 
     def get_random_point(self) -> Point:
         """
@@ -163,7 +165,7 @@ class Rect(object):
 
     def __str__(self):
         return "coordinates: %s; <Rect %s-%s>" % \
-               (self.coord_direction, self.topleft(), self.bottomright())
+               (self.coord_direction, self.topleft, self.bottomright)
 
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__,

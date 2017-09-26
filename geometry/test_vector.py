@@ -1,7 +1,8 @@
-import unittest
 import pickle
+import unittest
 
-from vector import Vec2d
+from geometry.vector import Vec2d
+
 
 ####################################################################
 class UnitTestVec2D(unittest.TestCase):
