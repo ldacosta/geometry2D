@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='Geometry2D',
-    version='0.7.0',
+    version='0.7.1',
     author='Luis Da Costa',
     author_email='dacosta.le@gmail.com',
     packages=['geometry'],
