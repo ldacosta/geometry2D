@@ -6,6 +6,7 @@
 
 import math
 import operator
+import numpy as np
 
 from geometry.point import Point
 
@@ -28,8 +29,15 @@ class Vec2d(object):
     def origin_to(self, a_pt: Point):
         return Vec2d(x_or_pair=a_pt)
 
+    @classmethod
+    def from_to(cls, from_pt: Point, to_pt: Point):
+        return cls(x_or_pair=(to_pt[0] - from_pt[0], to_pt[1] - from_pt[1]))
+
     def is_null(self):
         return (self.x == 0.0 ) and (self.y == 0.0)
+
+    def is_zero(self) -> bool:
+        return self.is_null()
 
     def __len__(self):
         return 2
@@ -292,6 +300,9 @@ class Vec2d(object):
         dot = self.x*other[0] + self.y*other[1]
         return math.degrees(math.atan2(cross, dot))
 
+    def norm(self) -> float:
+        return np.linalg.norm(np.asarray([self.x, self.y]))
+
     def normalized(self):
         length = self.length
         if length != 0:
@@ -342,3 +353,5 @@ class Vec2d(object):
 
     def __setstate__(self, dict):
         self.x, self.y = dict
+
+NULL_VECTOR = Vec2d(0, 0)

@@ -1,7 +1,8 @@
 import pickle
 import unittest
 
-from geometry.vector import Vec2d
+from geometry.point import Point
+from geometry.vector import Vec2d, NULL_VECTOR
 
 
 ####################################################################
@@ -114,3 +115,10 @@ class UnitTestVec2D(unittest.TestCase):
         loaded_vec = pickle.loads(testvec_str)
         self.assertEquals(testvec, loaded_vec)
 
+    def testNull(self):
+        """Properties for null vector"""
+        self.assertTrue(NULL_VECTOR.is_null())
+        self.assertTrue(Vec2d(0, 0).is_null())
+        self.assertTrue(Vec2d.origin_to(Point(0,0)).is_null())
+        a_pt = Point(1,2)
+        self.assertTrue(Vec2d.from_to(a_pt, a_pt).is_null())
