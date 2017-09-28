@@ -37,6 +37,9 @@ class Point:
     def from_tuple(cls, pt_as_tuple:Tuple[float,float]):
         return cls(x=pt_as_tuple[0],y=pt_as_tuple[1])
 
+    def __iter__(self):
+        return iter((self.x, self.y))
+
     def __getitem__(self, item):
         if item == 0:
             return self.x

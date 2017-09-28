@@ -38,3 +38,10 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(pt_1, pt_2)
         pt_3 = Point(x=pt_1.x, y=pt_1.y)
         self.assertEqual(pt_1, pt_3)
+
+    def test_unpacking_works(self):
+        """Can I unpack it?"""
+        pt_1 = Point(randint(0, 10), randint(0, 10))
+        (x,y) = pt_1
+        self.assertEqual(x, pt_1.x)
+        self.assertEqual(y, pt_1.y)
