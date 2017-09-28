@@ -11,5 +11,6 @@ setup(
     license='LICENSE.txt',
     long_description=open('README.txt').read(),
     install_requires=[
+        "numpy >= 1.13.1",
     ],
 )
