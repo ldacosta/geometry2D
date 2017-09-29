@@ -9,6 +9,7 @@ import operator
 import numpy as np
 
 from geometry.point import Point
+from geometry.angle import AngleInRadians
 
 
 class Vec2d(object):
@@ -32,6 +33,14 @@ class Vec2d(object):
     @classmethod
     def from_to(cls, from_pt: Point, to_pt: Point):
         return cls(x_or_pair=(to_pt[0] - from_pt[0], to_pt[1] - from_pt[1]))
+
+
+    @classmethod
+    def from_angle(cls, angle_in_radians: AngleInRadians):
+        return cls(x_or_pair=(angle_in_radians.cos, angle_in_radians.sin))
+
+    def angle_with_x_axis(self) -> AngleInRadians:
+        return AngleInRadians(np.arctan(self.y / self.x))
 
     def is_null(self):
         return (self.x == 0.0 ) and (self.y == 0.0)
@@ -355,3 +364,11 @@ class Vec2d(object):
         self.x, self.y = dict
 
 NULL_VECTOR = Vec2d(0, 0)
+X_UNIT_VECTOR = Vec2d.from_to(from_pt=Point(0,0), to_pt=Point(1,0))
+Y_UNIT_VECTOR = Vec2d.from_to(from_pt=Point(0,0), to_pt=Point(0,1))
+NULL_2D_VECTOR = NULL_VECTOR
+
+def angle_between(v1: Vec2d ,v2: Vec2d) -> AngleInRadians:
+    """Angle (in radians) between 2 vectors."""
+    return AngleInRadians.from_minus_pi_to_plus_pi(
+        value=np.arcsin(np.cross((v1.x, v1.y), (v2.x, v2.y)) / (v1.norm() * v2.norm())))
