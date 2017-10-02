@@ -1,6 +1,7 @@
 import pickle
 import unittest
 
+from geometry.angle import AngleInRadians
 from geometry.point import Point
 from geometry.vector import Vec2d, NULL_VECTOR
 
@@ -122,3 +123,11 @@ class UnitTestVec2D(unittest.TestCase):
         self.assertTrue(Vec2d.origin_to(Point(0,0)).is_null())
         a_pt = Point(1,2)
         self.assertTrue(Vec2d.from_to(a_pt, a_pt).is_null())
+
+    def testFromVector(self):
+        """Creating Vector from angle"""
+        import math
+        an_angle = AngleInRadians(value = AngleInRadians.PI_HALF)
+        v1 = Vec2d.from_angle(an_angle)
+        self.assertAlmostEquals(v1.x, 0)
+        self.assertAlmostEquals(v1.y, 1)

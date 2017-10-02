@@ -37,7 +37,7 @@ class Vec2d(object):
 
     @classmethod
     def from_angle(cls, angle_in_radians: AngleInRadians):
-        return cls(x_or_pair=(angle_in_radians.cos, angle_in_radians.sin))
+        return cls(x_or_pair=(angle_in_radians.cos(), angle_in_radians.sin()))
 
     def angle_with_x_axis(self) -> AngleInRadians:
         return AngleInRadians(np.arctan(self.y / self.x))
