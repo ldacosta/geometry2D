@@ -5,10 +5,19 @@ from geometry.util import normalize_to
 
 class Angle(metaclass=abc.ABCMeta):
 
-    def __init__(self, value: float, sinus: float, cosinus: float):
+    def __init__(self, value: float):
         self.value = value
-        self.sin = sinus
-        self.cos = cosinus
+
+    @abc.abstractmethod
+    def cos(self) -> float:
+        """Returns cosinus of angle."""
+        pass
+
+    @abc.abstractmethod
+    def sin(self) -> float:
+        """Returns sinus of angle."""
+        pass
+
 
 class AngleInRadians(Angle):
 
@@ -24,7 +33,13 @@ class AngleInRadians(Angle):
         """
         value = AngleInRadians.normalize(value)
         assert (value >= 0) and (value <= 2 * math.pi) # sanity check
-        super().__init__(value, sinus=math.sin(value), cosinus=math.cos(value))
+        super().__init__(value)
+
+    def cos(self):
+        return math.cos(self.value)
+
+    def sin(self):
+        return math.sin(self.value)
 
     @classmethod
     def from_degrees(cls, angle_in_degrees):
@@ -98,6 +113,13 @@ class AngleInDegrees(Angle):
     def __init__(self, value: float):
         assert (value >= 0) and (value <= 360)
         super().__init__(value, sinus=math.sin(math.radians(value)), cosinus=math.cos(math.radians(value)))
+
+
+    def cos(self):
+        return math.cos(math.radians(self.value))
+
+    def sin(self):
+        return math.sin(math.radians(self.value))
 
     @classmethod
     def from_radians(cls, angle_in_radians: AngleInRadians):
