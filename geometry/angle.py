@@ -21,8 +21,8 @@ class Angle(metaclass=abc.ABCMeta):
 
 class AngleInRadians(Angle):
 
-
     DIGITS_FOR_CMP = 4
+    PI = math.pi
     PI_HALF = math.pi / 2
     THREE_HALFS_OF_PI = 3 * math.pi / 2
 
