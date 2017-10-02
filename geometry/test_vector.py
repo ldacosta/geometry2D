@@ -3,7 +3,7 @@ import unittest
 
 from geometry.angle import AngleInRadians
 from geometry.point import Point
-from geometry.vector import Vec2d, NULL_VECTOR
+from geometry.vector import Vec2d, NULL_VECTOR, angle_between
 
 
 ####################################################################
@@ -131,3 +131,11 @@ class UnitTestVec2D(unittest.TestCase):
         v1 = Vec2d.from_angle(an_angle)
         self.assertAlmostEquals(v1.x, 0)
         self.assertAlmostEquals(v1.y, 1)
+
+    def testAngle(self):
+        """Do angles make sense?"""
+        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(10,10)).value, 0)
+        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,-1)).value, AngleInRadians.PI)
+        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,1)).value, AngleInRadians.PI_HALF)
+
+

@@ -370,4 +370,4 @@ NULL_2D_VECTOR = NULL_VECTOR
 
 def angle_between(v1: Vec2d ,v2: Vec2d) -> AngleInRadians:
     """Angle (in radians) between 2 vectors."""
-    return AngleInRadians(value=np.arccos(np.dot(Vec2d(1, -1).normalized(), Vec2d(1, 1).normalized())))
+    return AngleInRadians(value=np.arccos(np.dot(v1.normalized(), v2.normalized())))
