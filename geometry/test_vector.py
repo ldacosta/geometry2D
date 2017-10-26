@@ -1,6 +1,7 @@
 import pickle
 import unittest
 
+import random
 from geometry.angle import AngleInRadians
 from geometry.point import Point
 from geometry.vector import Vec2d, NULL_VECTOR, angle_between
@@ -137,5 +138,15 @@ class UnitTestVec2D(unittest.TestCase):
         self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(10,10)).value, 0)
         self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,-1)).value, AngleInRadians.PI)
         self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,1)).value, AngleInRadians.PI_HALF)
+
+    def test_angle_with_x(self):
+        self.assertEqual(Vec2d(0,0).angle_with_x_axis(), AngleInRadians(0))
+        for _ in range(10): # repetition of test
+            an_int = random.randint(-100, 100)
+            if an_int > 0:
+                self.assertEqual(Vec2d(0,an_int).angle_with_x_axis(), AngleInRadians.PI_HALF)
+            else:
+                self.assertEqual(Vec2d(0,an_int).angle_with_x_axis(), AngleInRadians.THREE_HALFS_OF_PI)
+
 
 
