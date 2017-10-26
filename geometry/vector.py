@@ -40,7 +40,15 @@ class Vec2d(object):
         return cls(x_or_pair=(angle_in_radians.cos(), angle_in_radians.sin()))
 
     def angle_with_x_axis(self) -> AngleInRadians:
-        return AngleInRadians(np.arctan(self.y / self.x))
+        if self.x == 0:
+            if self.y == 0:
+                return AngleInRadians(0)
+            elif self.y > 0:
+                return AngleInRadians.PI_HALF
+            else:
+                return AngleInRadians.THREE_HALFS_OF_PI
+        else:
+            return AngleInRadians(np.arctan(self.y / self.x))
 
     def is_null(self):
         return (self.x == 0.0 ) and (self.y == 0.0)
