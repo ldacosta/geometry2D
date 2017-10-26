@@ -35,6 +35,18 @@ class AngleInRadians(Angle):
         assert (value >= 0) and (value <= 2 * math.pi) # sanity check
         super().__init__(value)
 
+    def __eq__(self, other):
+        """Override the default Equals behavior"""
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        return NotImplemented
+
+    def __ne__(self, other):
+        """Define a non-equality test"""
+        if isinstance(other, self.__class__):
+            return not self.__eq__(other)
+        return NotImplemented
+
     def cos(self):
         return math.cos(self.value)
 
@@ -97,6 +109,10 @@ class AngleInRadians(Angle):
     def randomly_mutate(self):
         """Changes the value of this angle, at random."""
         self.value = normalize_to(random.random(), new_min=0.0, new_max=2*math.pi, old_min=0.0, old_max=1.0)
+
+
+    def __repr__(self):
+        return self.__str__()
 
     def __str__(self):
         if math.isclose(self.value, AngleInRadians.PI_HALF):
