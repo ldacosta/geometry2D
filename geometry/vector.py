@@ -44,9 +44,9 @@ class Vec2d(object):
             if self.y == 0:
                 return AngleInRadians(0)
             elif self.y > 0:
-                return AngleInRadians.PI_HALF
+                return AngleInRadians(AngleInRadians.PI_HALF)
             else:
-                return AngleInRadians.THREE_HALFS_OF_PI
+                return AngleInRadians(AngleInRadians.THREE_HALFS_OF_PI)
         else:
             return AngleInRadians(np.arctan(self.y / self.x))
 
@@ -285,22 +285,38 @@ class Vec2d(object):
         self.y *= value/length
     length = property(get_length, __setlength, None, "gets or sets the magnitude of the vector")
 
+    # Rotation ****************************************************
+
     def rotate(self, angle_degrees):
+        """Rotates this vector, returns same instance, modified."""
         radians = math.radians(angle_degrees)
+        self.rotate_radians(AngleInRadians(radians))
+        return self
+
+    def rotated(self, angle_degrees):
+        """Rotates this vector, returns a new vector with modified attributes."""
+        new_vector = Vec2d(self.x, self.y)
+        new_vector.rotate(angle_degrees)
+        return new_vector
+
+    def rotate_radians(self, angle_radians: AngleInRadians):
+        """Rotates this vector, returns same instance, modified."""
+        radians = angle_radians.value
         cos = math.cos(radians)
         sin = math.sin(radians)
         x = self.x*cos - self.y*sin
         y = self.x*sin + self.y*cos
         self.x = x
         self.y = y
+        return self
 
-    def rotated(self, angle_degrees):
-        radians = math.radians(angle_degrees)
-        cos = math.cos(radians)
-        sin = math.sin(radians)
-        x = self.x*cos - self.y*sin
-        y = self.x*sin + self.y*cos
-        return Vec2d(x, y)
+    def rotated_radians(self, angle_radians: AngleInRadians):
+        """Rotates this vector, returns a new vector with modified attributes."""
+        new_vector = Vec2d(self.x, self.y)
+        new_vector.rotate_radians(angle_radians)
+        return new_vector
+
+
 
     def get_angle(self):
         if (self.get_length_sqrd() == 0):
@@ -318,13 +334,23 @@ class Vec2d(object):
         return math.degrees(math.atan2(cross, dot))
 
     def norm(self) -> float:
-        return np.linalg.norm(np.asarray([self.x, self.y]))
+        """Norm of the vector. Forced it to be a Python float (not a numpy float64)"""
+        return float(np.linalg.norm(np.asarray([self.x, self.y])))
 
     def normalized(self):
         length = self.length
         if length != 0:
             return self/length
         return Vec2d(self)
+
+    def scaled_to_norm(self, new_norm: float):
+        """Returns new vector with specified norm, on same direction than the current one."""
+        assert new_norm >= 0
+        current_norm = self.norm()
+        multiplier = new_norm / current_norm
+        return Vec2d(self.x * multiplier, self.y * multiplier)
+
+
 
     def normalize_return_length(self):
         length = self.length
