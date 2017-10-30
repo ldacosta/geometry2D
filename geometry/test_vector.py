@@ -1,10 +1,11 @@
 import pickle
 import unittest
 
-import random
+# import random
+from random import randint, random
 from geometry.angle import AngleInRadians
 from geometry.point import Point
-from geometry.vector import Vec2d, NULL_VECTOR, angle_between
+from geometry.vector import Vec2d, NULL_VECTOR, angle_between, X_UNIT_VECTOR, Y_UNIT_VECTOR
 
 
 ####################################################################
@@ -62,7 +63,7 @@ class UnitTestVec2D(unittest.TestCase):
         self.assertEquals(v.angle, 90)
         v2 = Vec2d(v)
         v.rotate(-90)
-        self.assertEqual(v.get_angle_between(v2), 90)
+        self.assertAlmostEqual(v.get_angle_between(v2), 90)
         v2.angle -= 90
         self.assertEqual(v.length, v2.length)
         self.assertEquals(v2.angle, 0)
@@ -142,11 +143,29 @@ class UnitTestVec2D(unittest.TestCase):
     def test_angle_with_x(self):
         self.assertEqual(Vec2d(0,0).angle_with_x_axis(), AngleInRadians(0))
         for _ in range(10): # repetition of test
-            an_int = random.randint(-100, 100)
+            an_int = randint(-100, 100)
             if an_int > 0:
-                self.assertEqual(Vec2d(0,an_int).angle_with_x_axis(), AngleInRadians.PI_HALF)
-            else:
-                self.assertEqual(Vec2d(0,an_int).angle_with_x_axis(), AngleInRadians.THREE_HALFS_OF_PI)
+                self.assertEqual(
+                    Vec2d(0,an_int).angle_with_x_axis().value, AngleInRadians.PI_HALF,
+                    "Testing with Vec2d(0,%d)" % (an_int))
+            elif an_int < 0: # case with (0,0) is tested above.
+                self.assertEqual(
+                    Vec2d(0,an_int).angle_with_x_axis().value, AngleInRadians.THREE_HALFS_OF_PI,
+                    "Testing with Vec2d(0,%d)" % (an_int))
+        self.assertAlmostEquals(angle_between(v1 = X_UNIT_VECTOR, v2 = Y_UNIT_VECTOR).value, AngleInRadians.PI_HALF)
+        self.assertAlmostEquals(angle_between(v1 = Y_UNIT_VECTOR, v2 = Vec2d(.5,.5)).value, AngleInRadians.PI_HALF / 2, places=5)
+        for _ in range(10):
+            a_vector = Vec2d(random()/random(), random()/random())
+            another_vector = Vec2d(random()/random(), random()/random())
+            scale = random()/random()
+            orig_angle = angle_between(a_vector, another_vector)
+            scaled_angle = angle_between(a_vector * scale, another_vector * scale)
+            self.assertAlmostEquals(orig_angle.value, scaled_angle.value, places=5)
 
 
-
+    def test_scaling(self):
+        for _ in range(10):
+            a_vector = Vec2d(random()/random(), random()/random())
+            scale_to = randint(1, 30)
+            new_vector = a_vector.scaled_to_norm(new_norm = scale_to)
+            self.assertAlmostEqual(new_vector.norm(), scale_to)
