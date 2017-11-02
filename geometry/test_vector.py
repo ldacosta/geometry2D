@@ -140,27 +140,55 @@ class UnitTestVec2D(unittest.TestCase):
         self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,-1)).value, AngleInRadians.PI)
         self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,1)).value, AngleInRadians.PI_HALF)
 
-    def test_angle_with_x(self):
-        self.assertEqual(Vec2d(0,0).angle_with_x_axis(), AngleInRadians(0))
+    def test_angle_with_positive_x(self):
+        self.assertEqual(Vec2d(0,0).angle_with_positive_x_axis(), AngleInRadians(0))
         for _ in range(10): # repetition of test
             an_int = randint(-100, 100)
             if an_int > 0:
                 self.assertEqual(
-                    Vec2d(0,an_int).angle_with_x_axis().value, AngleInRadians.PI_HALF,
+                    Vec2d(0,an_int).angle_with_positive_x_axis().value, AngleInRadians.PI_HALF,
                     "Testing with Vec2d(0,%d)" % (an_int))
             elif an_int < 0: # case with (0,0) is tested above.
                 self.assertEqual(
-                    Vec2d(0,an_int).angle_with_x_axis().value, AngleInRadians.THREE_HALFS_OF_PI,
+                    Vec2d(0,an_int).angle_with_positive_x_axis().value, AngleInRadians.THREE_HALFS_OF_PI,
                     "Testing with Vec2d(0,%d)" % (an_int))
         self.assertAlmostEquals(angle_between(v1 = X_UNIT_VECTOR, v2 = Y_UNIT_VECTOR).value, AngleInRadians.PI_HALF)
         self.assertAlmostEquals(angle_between(v1 = Y_UNIT_VECTOR, v2 = Vec2d(.5,.5)).value, AngleInRadians.PI_HALF / 2, places=5)
-        for _ in range(10):
+        # angles between vectors differing in size must coincide
+        for _ in range(100):
             a_vector = Vec2d(random()/random(), random()/random())
             another_vector = Vec2d(random()/random(), random()/random())
             scale = random()/random()
             orig_angle = angle_between(a_vector, another_vector)
             scaled_angle = angle_between(a_vector * scale, another_vector * scale)
             self.assertAlmostEquals(orig_angle.value, scaled_angle.value, places=5)
+            # angles when x and y have different sign:
+            x = random()
+            if random() > 0.5:
+                x *= -1
+            y = random()
+            if random() > 0.5:
+                y *= -1
+
+            # if y < 0 => the smallest angle is for the equivalent of y > 0, so:
+            a_vector = Vec2d(x, y)
+            angle = a_vector.angle_with_positive_x_axis().value
+            self.assertTrue(angle >= 0, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+            self.assertTrue(angle <= 2 * AngleInRadians.PI, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+            if x >= 0:
+                if y >= 0:
+                    # self.assertTrue(angle >= 0, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                    self.assertTrue(angle <= AngleInRadians.PI_HALF, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                else:
+                    # self.assertTrue(angle <= 0, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                    self.assertTrue(angle >= AngleInRadians.THREE_HALFS_OF_PI, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+            else:
+                if y >= 0:
+                    # self.assertTrue(angle <= 0, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                    self.assertTrue(angle >= AngleInRadians.PI_HALF and angle <= AngleInRadians.PI, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                else:
+                    # self.assertTrue(angle >= 0, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
+                    self.assertTrue(angle >= AngleInRadians.PI and angle <= AngleInRadians.THREE_HALFS_OF_PI, "(%.2f, %.2f), angle = %.2f" % (x,y,angle))
 
 
     def test_scaling(self):
