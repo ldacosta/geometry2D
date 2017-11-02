@@ -39,7 +39,8 @@ class Vec2d(object):
     def from_angle(cls, angle_in_radians: AngleInRadians):
         return cls(x_or_pair=(angle_in_radians.cos(), angle_in_radians.sin()))
 
-    def angle_with_x_axis(self) -> AngleInRadians:
+    def angle_with_positive_x_axis(self) -> AngleInRadians:
+        """Returns the angle this vector makes with the X+ axis."""
         if self.x == 0:
             if self.y == 0:
                 return AngleInRadians(0)
@@ -48,7 +49,13 @@ class Vec2d(object):
             else:
                 return AngleInRadians(AngleInRadians.THREE_HALFS_OF_PI)
         else:
-            return AngleInRadians(np.arctan(self.y / self.x))
+            the_value = np.arctan(self.y / self.x)
+            if self.x < 0:
+                the_value += AngleInRadians.PI
+            else:
+                the_value += 2 * AngleInRadians.PI
+            a_in_rads = AngleInRadians(the_value)
+            return a_in_rads
 
     def is_null(self):
         return (self.x == 0.0 ) and (self.y == 0.0)
