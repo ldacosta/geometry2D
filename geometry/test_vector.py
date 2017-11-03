@@ -1,11 +1,10 @@
 import pickle
 import unittest
 
-# import random
 from random import randint, random
 from geometry.angle import AngleInRadians
 from geometry.point import Point
-from geometry.vector import Vec2d, NULL_VECTOR, angle_between, X_UNIT_VECTOR, Y_UNIT_VECTOR
+from geometry.vector import Vec2d, NULL_VECTOR, X_UNIT_VECTOR, Y_UNIT_VECTOR
 
 
 ####################################################################
@@ -136,9 +135,23 @@ class UnitTestVec2D(unittest.TestCase):
 
     def testAngle(self):
         """Do angles make sense?"""
-        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(10,10)).value, 0)
-        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,-1)).value, AngleInRadians.PI)
-        self.assertAlmostEquals(angle_between(v1 = Vec2d(1,1), v2 = Vec2d(-1,1)).value, AngleInRadians.PI_HALF)
+        self.assertAlmostEquals(X_UNIT_VECTOR.angle_to(Y_UNIT_VECTOR).value, AngleInRadians.PI_HALF)
+        self.assertAlmostEquals(Y_UNIT_VECTOR.angle_to(X_UNIT_VECTOR).value, AngleInRadians.THREE_HALFS_OF_PI)
+        # angle between colineal vectors is 0
+        a_vector = Vec2d(randint(-100, 100), randint(-100, 100))
+        a_vector_times_10 = a_vector * 10
+        self.assertAlmostEquals(a_vector.angle_to(a_vector_times_10).value, 0)
+        self.assertAlmostEquals(a_vector_times_10.angle_to(a_vector).value, 0)
+        # angle of a vector to another is equal to -1*(angle to another vector to one)
+        a_vector = Vec2d(randint(-100, 100), randint(-100, 100))
+        another_vector = Vec2d(randint(-100, 100), randint(-100, 100))
+        angle_one_to_the_other = a_vector.angle_to(another_vector)
+        angle_the_other_to_one = another_vector.angle_to(a_vector)
+        self.assertEqual(AngleInRadians(value = -angle_one_to_the_other.value), angle_the_other_to_one)
+        # some specific cases, to make for easy reading :-)
+        self.assertAlmostEquals(Vec2d(1,1).angle_to(Vec2d(-1,-1)).value, AngleInRadians.PI)
+        self.assertAlmostEquals(Vec2d(1,1).angle_to(Vec2d(-1,1)).value, AngleInRadians.PI_HALF)
+        self.assertAlmostEquals(Vec2d(.5,.5).angle_to(Y_UNIT_VECTOR).value, AngleInRadians.PI_HALF / 2, places=5)
 
     def test_angle_with_positive_x(self):
         self.assertEqual(Vec2d(0,0).angle_with_positive_x_axis(), AngleInRadians(0))
@@ -152,15 +165,13 @@ class UnitTestVec2D(unittest.TestCase):
                 self.assertEqual(
                     Vec2d(0,an_int).angle_with_positive_x_axis().value, AngleInRadians.THREE_HALFS_OF_PI,
                     "Testing with Vec2d(0,%d)" % (an_int))
-        self.assertAlmostEquals(angle_between(v1 = X_UNIT_VECTOR, v2 = Y_UNIT_VECTOR).value, AngleInRadians.PI_HALF)
-        self.assertAlmostEquals(angle_between(v1 = Y_UNIT_VECTOR, v2 = Vec2d(.5,.5)).value, AngleInRadians.PI_HALF / 2, places=5)
         # angles between vectors differing in size must coincide
         for _ in range(100):
             a_vector = Vec2d(random()/random(), random()/random())
             another_vector = Vec2d(random()/random(), random()/random())
             scale = random()/random()
-            orig_angle = angle_between(a_vector, another_vector)
-            scaled_angle = angle_between(a_vector * scale, another_vector * scale)
+            orig_angle = a_vector.angle_to(another_vector)
+            scaled_angle = (a_vector * scale).angle_to(another_vector * scale)
             self.assertAlmostEquals(orig_angle.value, scaled_angle.value, places=5)
             # angles when x and y have different sign:
             x = random()

@@ -57,6 +57,12 @@ class Vec2d(object):
             a_in_rads = AngleInRadians(the_value)
             return a_in_rads
 
+    def angle_to(self, another_vector) -> AngleInRadians:
+        """Returns angle that I sweep when I go from 'me' to another vector."""
+        angle_me_with_x = self.angle_with_positive_x_axis()
+        angle_another_with_x = another_vector.angle_with_positive_x_axis()
+        return angle_another_with_x - angle_me_with_x
+
     def is_null(self):
         return (self.x == 0.0 ) and (self.y == 0.0)
 
@@ -408,7 +414,3 @@ NULL_VECTOR = Vec2d(0, 0)
 X_UNIT_VECTOR = Vec2d.from_to(from_pt=Point(0,0), to_pt=Point(1,0))
 Y_UNIT_VECTOR = Vec2d.from_to(from_pt=Point(0,0), to_pt=Point(0,1))
 NULL_2D_VECTOR = NULL_VECTOR
-
-def angle_between(v1: Vec2d ,v2: Vec2d) -> AngleInRadians:
-    """Angle (in radians) between 2 vectors."""
-    return AngleInRadians(value=np.arccos(round(np.dot(v1.normalized(), v2.normalized()), 5)))
