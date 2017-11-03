@@ -97,6 +97,11 @@ class AngleInRadians(Angle):
             raise RuntimeError("I don't know how to add an Angle to something non-numeric")
         return other_as_angle
 
+    def __sub__(self, other):
+        other_as_angle = AngleInRadians.create_from(other)
+        value = AngleInRadians.normalize(self.value - other_as_angle.value)
+        return AngleInRadians(value)
+
     def __isub__(self, other):
         other_as_angle = AngleInRadians.create_from(other)
         self.value = AngleInRadians.normalize(self.value - other_as_angle.value)
