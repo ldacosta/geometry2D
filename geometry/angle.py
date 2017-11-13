@@ -97,7 +97,7 @@ class AngleInRadians(Angle):
             result = 2 * math.pi - abs_value_norm
         else:
             result = abs_value_norm
-        return round(result, 3)
+        return result
 
     def __iadd__(self, other):
         other_as_angle = AngleInRadians.create_from(other)
