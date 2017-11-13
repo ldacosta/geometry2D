@@ -49,6 +49,14 @@ class AngleInRadians(Angle):
     def __le__(self, other):
         return self.__eq__(other) or self.__lt__(other)
 
+    def __gt__(self, other):
+        if isinstance(other, self.__class__):
+            return round(self.value, 3) > round(other.value, 3)
+        return NotImplemented
+
+    def __ge__(self, other):
+        return self.__eq__(other) or self.__gt__(other)
+
     def __ne__(self, other):
         """Define a non-equality test"""
         if isinstance(other, self.__class__):
