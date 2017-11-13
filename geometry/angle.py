@@ -41,6 +41,14 @@ class AngleInRadians(Angle):
             return self.__dict__ == other.__dict__
         return NotImplemented
 
+    def __lt__(self, other):
+        if isinstance(other, self.__class__):
+            return round(self.value, 3) < round(other.value, 3)
+        return NotImplemented
+
+    def __le__(self, other):
+        return self.__eq__(other) or self.__lt__(other)
+
     def __ne__(self, other):
         """Define a non-equality test"""
         if isinstance(other, self.__class__):
@@ -78,9 +86,10 @@ class AngleInRadians(Angle):
         abs_value = abs(a_value)
         abs_value_norm = abs_value % (2 * math.pi)
         if a_value < 0:
-            return 2 * math.pi - abs_value_norm
+            result = 2 * math.pi - abs_value_norm
         else:
-            return abs_value_norm
+            result = abs_value_norm
+        return round(result, 3)
 
     def __iadd__(self, other):
         other_as_angle = AngleInRadians.create_from(other)
