@@ -150,7 +150,7 @@ class AngleInDegrees(Angle):
 
     def __init__(self, value: float):
         assert (value >= 0) and (value <= 360)
-        super().__init__(value, sinus=math.sin(math.radians(value)), cosinus=math.cos(math.radians(value)))
+        super().__init__(value)
 
 
     def cos(self):
