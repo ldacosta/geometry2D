@@ -152,6 +152,8 @@ class AngleInDegrees(Angle):
         assert (value >= 0) and (value <= 360)
         super().__init__(value)
 
+    def __str__(self):
+        return "Angle: %.2f degrees" % (self.value)
 
     def cos(self):
         return math.cos(math.radians(self.value))
