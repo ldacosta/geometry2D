@@ -109,8 +109,9 @@ class Point:
 
     def integerize(self):
         """Convert co-ordinate values to integers."""
-        self.x = int(self.x)
-        self.y = int(self.y)
+        self.x = int(round(self.x))
+        self.y = int(round(self.y))
+        return self
 
     def floatize(self):
         """Convert co-ordinate values to floats."""
